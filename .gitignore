@@ -2,3 +2,6 @@ elm-stuff/*
 */elm-stuff
 *~
 */*~
+*/index.html
+*/*.js
+.DS_Store
