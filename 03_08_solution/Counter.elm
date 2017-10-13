@@ -16,7 +16,8 @@ import Html.Events as Events
 
 type alias Model =
     { value : Int
-    , error : Maybe ( String, String )
+    , error : Maybe String
+    , input : String
     }
 
 
@@ -33,13 +34,20 @@ view model =
         , div [ Events.onClick <| Change -1 ] [ text "-" ]
         , div [ Events.onClick <| Change 3 ] [ text "+3" ]
         , label [] [ text "Enter a Value " ]
-        , input [ Attributes.placeholder "Enter a Value", Events.onInput SetValue ] []
+        , input
+            [ Attributes.placeholder "Enter a Value"
+            , Events.onInput SetValue
+            , Attributes.value model.input
+            ]
+            []
         , case model.error of
             Nothing ->
                 text ""
 
-            Just ( errmsg, newValue ) ->
-                div []
+            Just errmsg ->
+                div
+                    [ Attributes.style [ ( "color", "red" ) ]
+                    ]
                     [ text "Error "
                     , text errmsg
                     ]
@@ -57,24 +65,24 @@ update msg model =
             { model | value = model.value + n }
 
         SetValue "+" ->
-            { model | error = Just ( "", "+" ) }
+            { model | error = Nothing, input = "+" }
 
         SetValue "-" ->
-            { model | error = Just ( "", "-" ) }
+            { model | error = Nothing, input = "-" }
 
         SetValue newValue ->
             case String.toInt newValue of
                 Ok value ->
-                    Model value Nothing
+                    Model value Nothing newValue
 
                 Err errmsg ->
-                    { model | error = Just ( errmsg, newValue ) }
+                    { model | error = Just errmsg, input = newValue }
 
 
 main : Program Never Model Msg
 main =
     Html.beginnerProgram
-        { model = Model 0 Nothing
+        { model = Model 0 Nothing ""
         , view = view
         , update = update
         }

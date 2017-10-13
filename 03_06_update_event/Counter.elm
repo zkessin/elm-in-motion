@@ -1,6 +1,15 @@
 module Counter exposing (..)
 
-import Html exposing (Html, br, div, h1, input, label, text)
+import Html
+    exposing
+        ( Html
+        , br
+        , div
+        , h1
+        , input
+        , label
+        , text
+        )
 import Html.Attributes as Attributes
 import Html.Events as Events
 
@@ -11,7 +20,7 @@ type alias Model =
 
 type Msg
     = Change Int
-    | Input String
+    | SetValue String
 
 
 view : Model -> Html Msg
@@ -21,9 +30,8 @@ view model =
         , div [ Events.onClick <| Change 1 ] [ text "+" ]
         , div [ Events.onClick <| Change -1 ] [ text "-" ]
         , div [ Events.onClick <| Change 3 ] [ text "+3" ]
-        , label [] [ text "Set A value" ]
-        , text " "
-        , input [ Attributes.placeholder "Set a Value", Events.onInput Input ] []
+        , label [] [ text "Enter a Value " ]
+        , input [ Attributes.placeholder "Enter a Value", Events.onInput SetValue ] []
         ]
 
 
@@ -33,8 +41,8 @@ update msg model =
         Change n ->
             model + n
 
-        Input str ->
-            String.toInt str |> Result.withDefault model
+        SetValue newValue ->
+            String.toInt newValue |> Result.withDefault 0
 
 
 main : Program Never Model Msg
